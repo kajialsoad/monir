@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "H:\\download2025\\flutter\\packages\\flutter_tools\\gradle\\src\\main\\groovy\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "H:\\download2025\\android\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\Munna\\Downloads\\multispace_cloner_source\\multispace_cloner\\android\\app\\.cxx\\RelWithDebInfo\\144n3to5\\x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "H:\\download2025\\android\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\Munna\\Downloads\\multispace_cloner_source\\multispace_cloner\\android\\app\\.cxx\\RelWithDebInfo\\144n3to5\\x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

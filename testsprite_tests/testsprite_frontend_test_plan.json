@@ -1,0 +1,527 @@
+[
+  {
+    "id": "TC001",
+    "title": "Clone installed app successfully",
+    "description": "Verify that any standard installed Android app can be cloned creating a new parallel instance with isolated data directory and SQLite database.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Launch Multi Space App"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the app list screen"
+      },
+      {
+        "type": "action",
+        "description": "Search for an installed app to clone"
+      },
+      {
+        "type": "action",
+        "description": "Select an app and perform clone operation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify clone instance appears in home screen dashboard with default icon and name"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cloned app has isolated data directory different from original app"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cloned app has separate SQLite database instance"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm no data sharing occurs between original and cloned app"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Data isolation between cloned app instances",
+    "description": "Ensure that multiple cloned instances of the same app maintain complete data isolation preventing data leakage or corruption.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone the same installed app multiple times"
+      },
+      {
+        "type": "action",
+        "description": "Launch first clone and input some data"
+      },
+      {
+        "type": "action",
+        "description": "Launch second clone and verify absence of data entered in first clone"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify data directories and SQLite databases used by each clone are separate"
+      },
+      {
+        "type": "action",
+        "description": "Modify data in second clone"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify original app and first clone are unaffected by changes in second clone"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Custom icon and name for cloned apps",
+    "description": "Verify that users can customize the icon and name of cloned app instances and these changes are reflected correctly in the home screen dashboard.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Initiate clone and set custom icon and name via clone settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cloned app appears on dashboard with specified custom icon"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cloned app displays customized name on home dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Change icon and name in clone settings after cloning"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updated icon and name correctly update on home screen without app relaunch"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "MethodChannel communication reliability",
+    "description": "Validate reliable and performant communication via MethodChannel between Flutter UI and native Android service during clone operations.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Trigger app clone from Flutter UI"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify MethodChannel sends correct package info to native Android service"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify native service responds with success status in timely manner"
+      },
+      {
+        "type": "action",
+        "description": "Trigger clone delete via Flutter UI"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify related MethodChannel calls complete successfully with no errors"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Security feature enforcement on cloned apps",
+    "description": "Check encryption, anti-tamper protection, and permission isolation effectively secure cloned app data.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone an app with encryption enabled in settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cloned app data is stored encrypted on filesystem"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to tamper with cloned app data files"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify tampering triggers protection mechanism and blocks access"
+      },
+      {
+        "type": "action",
+        "description": "Check cloned app runs with restricted permissions as per isolation rules"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no elevated permissions are leaked or inherited from original app"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Performance under multiple app cloning load",
+    "description": "Assess memory and CPU usage benchmarks when cloning multiple apps and launching multiple replica instances.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone 5 different popular apps and launch all clones"
+      },
+      {
+        "type": "assertion",
+        "description": "Monitor memory consumption and verify it stays within defined limits"
+      },
+      {
+        "type": "assertion",
+        "description": "Monitor CPU usage to confirm no excessive spikes or leaks occur"
+      },
+      {
+        "type": "action",
+        "description": "Perform navigation and usage in cloned apps"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure app launch time remains consistent and performance is smooth"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "App list and search functionality",
+    "description": "Validate browsing installed apps, searching by name/package, and selecting apps for cloning functions properly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open app list screen in Multi Space App"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all installed apps are displayed with icons and names"
+      },
+      {
+        "type": "action",
+        "description": "Search for app by partial and full name"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify search results match query string correctly"
+      },
+      {
+        "type": "action",
+        "description": "Select app from search results to initiate cloning"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that the app cloning workflow starts for selected app"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Settings configuration persistence and effect",
+    "description": "Verify that user preferences including max clone instances, encryption settings, and naming conventions are saved and applied properly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open settings screen"
+      },
+      {
+        "type": "action",
+        "description": "Change max instances allowed to 3"
+      },
+      {
+        "type": "action",
+        "description": "Enable data encryption for clones"
+      },
+      {
+        "type": "action",
+        "description": "Set clone naming convention with prefix 'Clone-'"
+      },
+      {
+        "type": "action",
+        "description": "Save and exit settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify settings persist after app restart"
+      },
+      {
+        "type": "action",
+        "description": "Clone app 4 times"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cloning fails or warns when exceeding max instance limit"
+      },
+      {
+        "type": "action",
+        "description": "Verify cloned app names follow naming convention"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify data of new clones is encrypted when encryption enabled"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Clone deletion and resource cleanup",
+    "description": "Verify users can delete cloned app instances and associated isolated data and virtual space resources are properly cleaned.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone an app instance"
+      },
+      {
+        "type": "action",
+        "description": "Delete the cloned app instance from home screen dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cloned instance is removed from dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify isolated data directories and databases related to deleted clone are removed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify virtual space allocated to clone is released"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Auto clone detection for installed apps",
+    "description": "Check the automatic detection system correctly identifies apps installed on the device that are cloneable.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Start Multi Space App and open app list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify only cloneable apps appear in the list"
+      },
+      {
+        "type": "action",
+        "description": "Install a new cloneable app during runtime"
+      },
+      {
+        "type": "action",
+        "description": "Refresh or reopen app list screen"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify new cloneable app is detected and listed"
+      },
+      {
+        "type": "action",
+        "description": "Install a non-cloneable or system app"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify non-cloneable apps are not listed"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Synchronization between cloned app instances",
+    "description": "Validate that synchronization operations between cloned instances complete successfully without data loss or inconsistency when enabled.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone an app twice"
+      },
+      {
+        "type": "action",
+        "description": "Enable synchronization setting between the two clones"
+      },
+      {
+        "type": "action",
+        "description": "Modify data in first clone"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify data updates reflect on second clone after synchronization completes"
+      },
+      {
+        "type": "action",
+        "description": "Simulate synchronization interruption and retry"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify data consistency is maintained and no corruption occurs"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Compliance with Google Play Store policies",
+    "description": "Ensure app does not trigger harmful app warnings or policy violations for cloned apps and enables successful store distribution.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone popular apps with different permission sets"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no warnings or alerts about harmful or malicious behavior occur at runtime"
+      },
+      {
+        "type": "action",
+        "description": "Analyze logs and reports for compliance with Play Store guidelines"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm cloned apps meet policy requirements on permissions, data handling, and sandboxing"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Runtime hooking system behavior",
+    "description": "Test runtime hooking system correctly customizes app behaviour inside cloned instances without crashing or corrupting data.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone an app with hooking enabled"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify hooks execute and modify app behavior as intended"
+      },
+      {
+        "type": "action",
+        "description": "Test app features affected by hooking (e.g. UI modification, API call interception)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no crashes or data corruption occur from hooking"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Statistics tracking accuracy",
+    "description": "Verify cloned app instances usage and performance statistics are tracked accurately and displayed correctly in settings or debug screens.",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone apps and perform various usage patterns"
+      },
+      {
+        "type": "action",
+        "description": "Open statistics or analytics screen"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify statistics reflect correct usage data for each clone"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify performance metrics such as launch times and memory usage are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Account management across cloned apps",
+    "description": "Ensure users can manage multiple accounts effectively across cloned app instances including creation, switching and deletion.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Clone a multi-account app"
+      },
+      {
+        "type": "action",
+        "description": "Sign in with different accounts on separate clones"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify accounts remain isolated and do not interfere"
+      },
+      {
+        "type": "action",
+        "description": "Delete one account or clone instance"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify deletion affects only selected account/clone"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Error handling on cloning unsupported apps",
+    "description": "Validate error messages and graceful handling when attempting to clone unsupported or system apps not eligible for cloning.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to clone a system or protected app"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify error message indicates cloning is not supported for this app"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify app remains stable and does not crash or hang"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Memory leak detection and resolution",
+    "description": "Test the memory optimizer to ensure no memory leaks occur during cloning, app launching, switching between clones, and deletion workflows.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Continuously clone and delete apps repeatedly in a loop"
+      },
+      {
+        "type": "action",
+        "description": "Launch multiple cloned instances and switch between them"
+      },
+      {
+        "type": "assertion",
+        "description": "Use profiling tools to detect memory leaks"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify memory consumption stabilizes and no leaks persist"
+      }
+    ]
+  }
+]

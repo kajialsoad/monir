@@ -1,0 +1,2 @@
+G:/multi-spaces-main/multi-spaces-main/android/app/.cxx/Debug/3e6u501a/armeabi-v7a/CMakeFiles/edit_cache.dir
+G:/multi-spaces-main/multi-spaces-main/android/app/.cxx/Debug/3e6u501a/armeabi-v7a/CMakeFiles/rebuild_cache.dir

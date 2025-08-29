@@ -1,0 +1,2 @@
+G:/multi-spaces-main/multi-spaces-main/android/app/.cxx/RelWithDebInfo/2s04x1a5/arm64-v8a/CMakeFiles/edit_cache.dir
+G:/multi-spaces-main/multi-spaces-main/android/app/.cxx/RelWithDebInfo/2s04x1a5/arm64-v8a/CMakeFiles/rebuild_cache.dir

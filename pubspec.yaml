@@ -1,0 +1,55 @@
+name: multispace_cloner
+description: "A Multi Space App (App Cloner & Parallel Apps) for Android"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  shared_preferences: ^2.2.3
+  path_provider: ^2.1.1
+  permission_handler: ^11.3.1
+  crypto: ^3.0.3
+
+  # Performance optimizations
+  flutter_cache_manager: ^3.3.1
+  cached_network_image: ^3.3.1
+
+  # Advanced features
+  sqflite: ^2.3.0
+  encrypt: ^5.0.3
+
+  # UI enhancements
+  flutter_staggered_animations: ^1.1.1
+  shimmer: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^4.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+
+# flutter_launcher_icons:
+#   android: "launcher_icon"
+#   ios: true
+#   image_path: "assets/images/app_icon.png"
+#   min_sdk_android: 21

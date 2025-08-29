@@ -1,0 +1,181 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+android {
+    namespace = "com.multispace.app.multispace_cloner"
+    compileSdk = 34
+    ndkVersion = "28.0.13004108"
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled = true
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId = "com.multispace.app.multispace_cloner"
+        minSdk = 21
+        targetSdk = 34
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+        multiDexEnabled = true
+        
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64'
+        }
+        
+        // Release build optimization
+        vectorDrawables.useSupportLibrary = true
+        resConfigs "en", "bn"
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('debug.keystore')
+            storePassword 'android'
+        }
+        
+        release {
+            // For production, create a proper keystore
+            // keyAlias keystoreProperties['keyAlias']
+            // keyPassword keystoreProperties['keyPassword']
+            // storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            // storePassword keystoreProperties['storePassword']
+            
+            // Temporary debug signing for development
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('debug.keystore')
+            storePassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.debug
+            minifyEnabled = false
+            shrinkResources = false
+            debuggable = true
+            jniDebuggable = false
+            renderscriptDebuggable = false
+            zipAlignEnabled = false
+        }
+        
+        release {
+            signingConfig = signingConfigs.release
+            minifyEnabled = true
+            shrinkResources = true
+            debuggable = false
+            jniDebuggable = false
+            renderscriptDebuggable = false
+            zipAlignEnabled = true
+            
+            // Enhanced release optimization
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // NDK optimization
+            ndk {
+                abiFilters 'arm64-v8a', 'armeabi-v7a'
+            }
+            
+            // Build optimization
+            crunchPngs = true
+            
+            // Performance optimization
+            manifestPlaceholders = [
+                enableCrashlytics: "true"
+            ]
+        }
+        
+        profile {
+            signingConfig = signingConfigs.debug
+            minifyEnabled = true
+            shrinkResources = true
+            debuggable = false
+            jniDebuggable = false
+            renderscriptDebuggable = false
+            zipAlignEnabled = true
+            
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            ndk {
+                abiFilters 'arm64-v8a', 'armeabi-v7a'
+            }
+        }
+    }
+    
+    // Optimize packaging
+    packagingOptions {
+        pickFirst '**/libc++_shared.so'
+        pickFirst '**/libjsc.so'
+        pickFirst '**/libfbjni.so'
+        pickFirst '**/libflutter.so'
+        pickFirst '**/libapp.so'
+        
+        // Exclude unnecessary files for smaller APK
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/io.netty.versions.properties'
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    // Core Android dependencies with optimized versions
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    
+    // Kotlin and AndroidX - latest stable versions
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    
+    // Security
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    
+    // Performance optimizations
+    implementation 'androidx.startup:startup-runtime:1.1.1'
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    
+    // Memory management
+    implementation 'androidx.lifecycle:lifecycle-process:2.7.0'
+    
+    // Coroutines for better async handling
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+}

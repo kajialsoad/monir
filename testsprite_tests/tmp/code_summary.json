@@ -1,0 +1,65 @@
+{
+  "tech_stack": ["Flutter", "Dart", "Kotlin", "Android", "SQLite", "SharedPreferences", "MethodChannel"],
+  "features": [
+    {
+      "name": "App Cloning",
+      "description": "Clone installed apps to create parallel instances with isolated data",
+      "files": ["lib/services/app_service.dart", "android/app/src/main/kotlin/com/example/multispace_cloner/MainActivity.kt", "lib/screens/app_list_screen.dart"]
+    },
+    {
+      "name": "Virtual Space Management",
+      "description": "Manage virtual spaces for app isolation and data separation",
+      "files": ["android/app/src/main/kotlin/com/example/multispace_cloner/VirtualSpaceEngine.kt", "android/app/src/main/kotlin/com/example/multispace_cloner/VirtualSpaceManager.kt"]
+    },
+    {
+      "name": "Data Isolation",
+      "description": "Isolate app data using separate directories and databases",
+      "files": ["lib/services/data_isolation_service.dart", "android/app/src/main/kotlin/com/example/multispace_cloner/DatabaseHelper.kt"]
+    },
+    {
+      "name": "Security Management",
+      "description": "Handle app security, encryption, and anti-tamper protection",
+      "files": ["android/app/src/main/kotlin/com/example/multispace_cloner/SecurityManager.kt", "android/app/src/main/kotlin/com/example/multispace_cloner/AntiTamperProtection.kt", "android/app/src/main/kotlin/com/example/multispace_cloner/CryptoUtils.kt"]
+    },
+    {
+      "name": "Performance Optimization",
+      "description": "Monitor and optimize app performance, memory usage",
+      "files": ["android/app/src/main/kotlin/com/example/multispace_cloner/PerformanceManager.kt", "android/app/src/main/kotlin/com/example/multispace_cloner/MemoryOptimizer.kt", "android/app/src/main/kotlin/com/example/multispace_cloner/PerformanceChannel.kt"]
+    },
+    {
+      "name": "Home Screen",
+      "description": "Main dashboard showing cloned apps and system information",
+      "files": ["lib/screens/home_screen.dart", "lib/widgets/cloned_apps_screen.dart"]
+    },
+    {
+      "name": "App List Management",
+      "description": "Display, search, and manage installed apps for cloning",
+      "files": ["lib/screens/app_list_screen.dart", "lib/services/app_service.dart"]
+    },
+    {
+      "name": "Settings Management",
+      "description": "App configuration and user preferences",
+      "files": ["lib/screens/settings_screen.dart"]
+    },
+    {
+      "name": "Hooking System",
+      "description": "Runtime hooking for app behavior modification",
+      "files": ["android/app/src/main/kotlin/com/example/multispace_cloner/HookingSystem.kt"]
+    },
+    {
+      "name": "Code Obfuscation",
+      "description": "Protect app code from reverse engineering",
+      "files": ["android/app/src/main/kotlin/com/example/multispace_cloner/ObfuscationEngine.kt"]
+    },
+    {
+      "name": "Statistics Tracking",
+      "description": "Track app usage and performance statistics",
+      "files": ["android/app/src/main/kotlin/com/example/multispace_cloner/InstanceStatistics.kt"]
+    },
+    {
+      "name": "Account Management",
+      "description": "Manage multiple accounts for cloned apps",
+      "files": ["android/app/src/main/kotlin/com/example/multispace_cloner/MainActivity.kt"]
+    }
+  ]
+}
