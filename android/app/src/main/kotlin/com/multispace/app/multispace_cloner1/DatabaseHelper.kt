@@ -14,7 +14,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "multispace_cloner.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
         private const val TAG = "DatabaseHelper"
         
         @Volatile
@@ -43,7 +43,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                     ${ClonedApp.COLUMN_LAST_USED} INTEGER NOT NULL,
                     ${ClonedApp.COLUMN_DATA_PATH} TEXT NOT NULL,
                     ${ClonedApp.COLUMN_USER_ID} INTEGER DEFAULT 0,
-                    ${ClonedApp.COLUMN_ACCOUNT_INFO} TEXT
+                    ${ClonedApp.COLUMN_ACCOUNT_INFO} TEXT,
+                    ${ClonedApp.COLUMN_STORAGE_LIMIT} INTEGER DEFAULT 2147483648
                 )
             """.trimIndent()
             
@@ -97,6 +98,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         try {
             // Handle database upgrades here
             when (oldVersion) {
+                1 -> {
+                    // Add storageLimit column if upgrading from version 1
+                    try {
+                        db.execSQL("ALTER TABLE ${ClonedApp.TABLE_NAME} ADD COLUMN ${ClonedApp.COLUMN_STORAGE_LIMIT} INTEGER DEFAULT 2147483648")
+                        Log.d(TAG, "Added storageLimit column to existing database")
+                    } catch (e: Exception) {
+                        Log.w(TAG, "storageLimit column might already exist", e)
+                    }
+                }
                 // Add migration logic for future versions
             }
             Log.d(TAG, "Database upgraded from version $oldVersion to $newVersion")
@@ -133,6 +143,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 put(ClonedApp.COLUMN_DATA_PATH, clonedApp.dataPath)
                 put(ClonedApp.COLUMN_USER_ID, clonedApp.userId)
                 put(ClonedApp.COLUMN_ACCOUNT_INFO, clonedApp.accountInfo)
+                put(ClonedApp.COLUMN_STORAGE_LIMIT, clonedApp.storageLimit)
             }
             val result = db.insert(ClonedApp.TABLE_NAME, null, values)
             Log.d(TAG, "Cloned app inserted with ID: $result")
@@ -178,7 +189,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                         lastUsed = it.getLong(it.getColumnIndexOrThrow(ClonedApp.COLUMN_LAST_USED)),
                         dataPath = it.getString(it.getColumnIndexOrThrow(ClonedApp.COLUMN_DATA_PATH)),
                         userId = it.getInt(it.getColumnIndexOrThrow(ClonedApp.COLUMN_USER_ID)),
-                        accountInfo = it.getString(it.getColumnIndexOrThrow(ClonedApp.COLUMN_ACCOUNT_INFO))
+                        accountInfo = it.getString(it.getColumnIndexOrThrow(ClonedApp.COLUMN_ACCOUNT_INFO)),
+                        storageLimit = it.getLong(it.getColumnIndexOrThrow(ClonedApp.COLUMN_STORAGE_LIMIT))
                     )
                     clonedApps.add(clonedApp)
                     Log.d("DatabaseHelper", "getAllClonedApps: Added app ${clonedApp.clonedAppName} (${clonedApp.originalPackageName})")
@@ -223,7 +235,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                     lastUsed = cursor.getLong(cursor.getColumnIndexOrThrow(ClonedApp.COLUMN_LAST_USED)),
                     dataPath = cursor.getString(cursor.getColumnIndexOrThrow(ClonedApp.COLUMN_DATA_PATH)),
                     userId = cursor.getInt(cursor.getColumnIndexOrThrow(ClonedApp.COLUMN_USER_ID)),
-                    accountInfo = cursor.getString(cursor.getColumnIndexOrThrow(ClonedApp.COLUMN_ACCOUNT_INFO))
+                    accountInfo = cursor.getString(cursor.getColumnIndexOrThrow(ClonedApp.COLUMN_ACCOUNT_INFO)),
+                    storageLimit = cursor.getLong(cursor.getColumnIndexOrThrow(ClonedApp.COLUMN_STORAGE_LIMIT))
                 )
             }
             cursor.close()

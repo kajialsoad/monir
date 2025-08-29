@@ -97,8 +97,10 @@ class SandboxManager private constructor(private val context: Context) {
         val auditAllAccess: Boolean = true,
         val restrictedPermissions: Set<String> = emptySet(),
         val allowedNetworkHosts: Set<String> = emptySet(),
-        val maxStorageSize: Long = 2048 * 1024 * 1024, // 2GB default
-        val maxMemorySize: Long = 512 * 1024 * 1024     // 512MB default
+        val maxStorageSize: Long = 8192 * 1024 * 1024, // 8GB increased limit
+        val maxMemorySize: Long = 1024 * 1024 * 1024,   // 1GB increased limit
+        val enableStorageCleanup: Boolean = true,       // Auto cleanup when limit reached
+        val storageWarningThreshold: Float = 0.8f       // Warning at 80% usage
     )
     
     /**
@@ -159,7 +161,7 @@ class SandboxManager private constructor(private val context: Context) {
             val virtualProcPath = setupVirtualProcessSpace(sandboxId)
             
             // Create isolated storage
-            val (dataPath, cachePath, libPath) = createIsolatedStorage(sandboxId, packageName)
+            val (dataPath, cachePath, libPath) = createIsolatedStorage(sandboxId, packageName, securityPolicy)
             
             // Setup network namespace
             val networkNamespace = createNetworkNamespace(sandboxId)
@@ -282,7 +284,7 @@ class SandboxManager private constructor(private val context: Context) {
      * 💾 Create Isolated Storage
      * Sets up completely isolated storage for the sandbox
      */
-    private fun createIsolatedStorage(sandboxId: String, packageName: String): Triple<String, String, String> {
+    private fun createIsolatedStorage(sandboxId: String, packageName: String, securityPolicy: SecurityPolicy): Triple<String, String, String> {
         val sandboxRoot = File(context.filesDir, "$SANDBOX_ROOT_DIR/$sandboxId")
         
         // Data directory
@@ -306,9 +308,9 @@ class SandboxManager private constructor(private val context: Context) {
             setExecutable(true, true)
         }
         
-        // Create storage quota file
+        // Create storage quota file with SecurityPolicy limit
         val quotaFile = File(sandboxRoot, ".storage_quota")
-        quotaFile.writeText("${2048 * 1024 * 1024}") // 2GB default
+        quotaFile.writeText("${securityPolicy.maxStorageSize}") // Use SecurityPolicy limit
         
         Log.d(TAG, "💾 Isolated storage created")
         Log.d(TAG, "   📁 Data: ${dataPath.absolutePath}")
@@ -525,6 +527,46 @@ class SandboxManager private constructor(private val context: Context) {
         }
     }
     
+    /**
+     * 🧹 Clear All Sandbox Environments
+     * Destroys all active sandboxes and cleans up resources
+     */
+    fun clearAllSandboxes(): Boolean {
+        return try {
+            Log.d(TAG, "🧹 Clearing all sandbox environments...")
+            
+            val sandboxIds = activeSandboxes.keys.toList()
+            var successCount = 0
+            
+            for (sandboxId in sandboxIds) {
+                if (destroySandboxEnvironment(sandboxId)) {
+                    successCount++
+                }
+            }
+            
+            // Clear the entire sandbox root directory
+            val sandboxRoot = File(context.filesDir, SANDBOX_ROOT_DIR)
+            if (sandboxRoot.exists()) {
+                sandboxRoot.deleteRecursively()
+                sandboxRoot.mkdirs()
+            }
+            
+            // Clear all config files
+            val configDir = File(context.filesDir, "sandbox_configs")
+            if (configDir.exists()) {
+                configDir.deleteRecursively()
+                configDir.mkdirs()
+            }
+            
+            Log.d(TAG, "✅ Cleared $successCount/${sandboxIds.size} sandbox environments")
+            successCount == sandboxIds.size
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ Failed to clear all sandboxes", e)
+            false
+        }
+    }
+    
     private fun terminateSandboxProcesses(sandbox: SandboxEnvironment) {
         // In a real implementation, you would terminate processes running in the sandbox
         Log.d(TAG, "Terminating processes for sandbox: ${sandbox.sandboxId}")
@@ -619,10 +661,39 @@ class SandboxManager private constructor(private val context: Context) {
             try {
                 // Check storage usage
                 val storageUsed = calculateStorageUsage(sandbox)
-                if (storageUsed > sandbox.storageLimit) {
-                    Log.w(TAG, "⚠️ Sandbox $sandboxId exceeded storage limit")
-                    // Could implement cleanup or notification here
+                
+                // Debug logging for storage limit issue
+                Log.d(TAG, "📊 Sandbox $sandboxId Storage Debug:")
+                Log.d(TAG, "   💾 Storage Used: ${storageUsed / (1024 * 1024)} MB")
+                Log.d(TAG, "   📏 Storage Limit: ${sandbox.storageLimit / (1024 * 1024)} MB")
+                Log.d(TAG, "   🔧 Security Policy Max: ${sandbox.securityPolicy.maxStorageSize / (1024 * 1024)} MB")
+                
+                // Prevent division by zero
+                val storageUsagePercent = if (sandbox.storageLimit > 0) {
+                    storageUsed.toFloat() / sandbox.storageLimit.toFloat()
+                } else {
+                    Log.e(TAG, "❌ Sandbox $sandboxId has ZERO storage limit! Using security policy limit.")
+                    storageUsed.toFloat() / sandbox.securityPolicy.maxStorageSize.toFloat()
                 }
+                
+                // Warning threshold check
+                if (storageUsagePercent >= sandbox.securityPolicy.storageWarningThreshold) {
+                    Log.w(TAG, "⚠️ Sandbox $sandboxId storage usage: ${(storageUsagePercent * 100).toInt()}%")
+                }
+                
+                // Storage limit exceeded - use proper limit value
+                val effectiveStorageLimit = if (sandbox.storageLimit > 0) sandbox.storageLimit else sandbox.securityPolicy.maxStorageSize
+                if (storageUsed > effectiveStorageLimit) {
+                    Log.e(TAG, "🚨 Sandbox $sandboxId exceeded storage limit: ${storageUsed / (1024 * 1024)} MB / ${effectiveStorageLimit / (1024 * 1024)} MB")
+                    
+                    // Auto cleanup if enabled
+                    if (sandbox.securityPolicy.enableStorageCleanup) {
+                        performStorageCleanup(sandbox)
+                    }
+                }
+                
+                // Memory usage check
+                checkMemoryUsage(sandbox)
                 
                 // Update last accessed time if sandbox is active
                 if (sandbox.isActive) {
@@ -654,6 +725,72 @@ class SandboxManager private constructor(private val context: Context) {
             }
         }
         return size
+    }
+    
+    /**
+     * 🧹 Perform Storage Cleanup
+     * Automatically cleans up sandbox storage when limit is exceeded
+     */
+    private fun performStorageCleanup(sandbox: SandboxEnvironment) {
+        try {
+            Log.d(TAG, "🧹 Performing storage cleanup for sandbox: ${sandbox.sandboxId}")
+            
+            val sandboxRoot = File(sandbox.rootPath)
+            
+            // Clean cache directories first
+            val cacheDir = File(sandbox.cachePath)
+            if (cacheDir.exists()) {
+                cacheDir.deleteRecursively()
+                cacheDir.mkdirs()
+                Log.d(TAG, "🗑️ Cleaned cache directory")
+            }
+            
+            // Clean temporary files
+            val tempDir = File(sandboxRoot, "tmp")
+            if (tempDir.exists()) {
+                tempDir.deleteRecursively()
+                tempDir.mkdirs()
+                Log.d(TAG, "🗑️ Cleaned temp directory")
+            }
+            
+            // Clean log files older than 7 days
+            val logDir = File(sandboxRoot, "var/log")
+            if (logDir.exists()) {
+                val sevenDaysAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
+                logDir.listFiles()?.forEach { file ->
+                    if (file.lastModified() < sevenDaysAgo) {
+                        file.delete()
+                    }
+                }
+                Log.d(TAG, "🗑️ Cleaned old log files")
+            }
+            
+            // Verify cleanup success
+            val newStorageUsed = calculateStorageUsage(sandbox)
+            Log.d(TAG, "✅ Storage cleanup completed. New usage: ${newStorageUsed / (1024 * 1024)} MB")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ Storage cleanup failed for sandbox: ${sandbox.sandboxId}", e)
+        }
+    }
+    
+    /**
+     * 🧠 Check Memory Usage
+     * Monitors memory usage of sandbox processes
+     */
+    private fun checkMemoryUsage(sandbox: SandboxEnvironment) {
+        try {
+            val runtime = Runtime.getRuntime()
+            val usedMemory = runtime.totalMemory() - runtime.freeMemory()
+            val memoryUsagePercent = usedMemory.toFloat() / sandbox.memoryLimit.toFloat()
+            
+            if (memoryUsagePercent >= 0.9f) {
+                Log.w(TAG, "⚠️ Sandbox ${sandbox.sandboxId} high memory usage: ${(memoryUsagePercent * 100).toInt()}%")
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking memory usage for sandbox: ${sandbox.sandboxId}", e)
+        }
     }
     
     // 🔓 Public API Methods

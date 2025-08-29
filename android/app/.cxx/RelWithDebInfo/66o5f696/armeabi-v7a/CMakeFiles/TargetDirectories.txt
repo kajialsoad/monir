@@ -1,0 +1,2 @@
+G:/monir-main/android/app/.cxx/RelWithDebInfo/66o5f696/armeabi-v7a/CMakeFiles/edit_cache.dir
+G:/monir-main/android/app/.cxx/RelWithDebInfo/66o5f696/armeabi-v7a/CMakeFiles/rebuild_cache.dir

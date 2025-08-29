@@ -399,6 +399,21 @@ class HookingSystem(private val context: Context) {
             // - Native code injection
             // - System call interception
             
+            // 🔐 FRESH LOGIN ENFORCEMENT - Critical for complete isolation
+            enforceFreshLoginRequirement(packageName, virtualSpaceId)
+            
+            // 🗂️ Hook SharedPreferences for complete data isolation
+            hookSharedPreferences(packageName, virtualSpaceId)
+            
+            // 🗄️ Hook Database access for isolated storage
+            hookDatabaseAccess(packageName, virtualSpaceId)
+            
+            // 🌐 Hook WebView for isolated web data
+            hookWebViewData(packageName, virtualSpaceId)
+            
+            // 👤 Hook Account Manager for isolated accounts
+            hookAccountManager(packageName, virtualSpaceId)
+            
             val hookConfig = getRuntimeHookConfig(packageName, virtualSpaceId)
             if (hookConfig != null) {
                 // Apply hooks based on configuration
@@ -557,6 +572,218 @@ class HookingSystem(private val context: Context) {
                 val value = envConfig.getString(key)
                 // Set environment variable (requires native code or reflection)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    
+    /**
+     * 🔐 Enforce fresh login requirement for complete isolation
+     */
+    private fun enforceFreshLoginRequirement(packageName: String, virtualSpaceId: String) {
+        try {
+            val virtualDataPath = getVirtualDataPath(packageName, virtualSpaceId)
+            val dataDir = File(virtualDataPath)
+            
+            // Create fresh login marker
+            val loginMarker = File(dataDir, "REQUIRE_FRESH_LOGIN.marker")
+            if (!loginMarker.exists()) {
+                dataDir.mkdirs()
+                loginMarker.writeText("Fresh login required: ${System.currentTimeMillis()}\nPackage: $packageName\nVirtualSpace: $virtualSpaceId")
+            }
+            
+            // Clear any existing authentication data
+            clearExistingAuthData(packageName, virtualSpaceId)
+            
+            // Setup login enforcement hooks
+            setupLoginEnforcementHooks(packageName, virtualSpaceId)
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    
+    /**
+     * 🧹 Clear existing authentication data
+     */
+    private fun clearExistingAuthData(packageName: String, virtualSpaceId: String) {
+        try {
+            val virtualDataPath = getVirtualDataPath(packageName, virtualSpaceId)
+            
+            // Clear authentication-related preferences
+            val authPrefs = listOf(
+                "auth_token", "access_token", "refresh_token", "session_id",
+                "user_id", "login_state", "account_info", "credentials"
+            )
+            
+            val prefs = context.getSharedPreferences("${packageName}_auth", Context.MODE_PRIVATE)
+            val editor = prefs.edit()
+            authPrefs.forEach { key ->
+                editor.remove(key)
+            }
+            editor.apply()
+            
+            // Clear authentication files
+            val authFiles = listOf(
+                "auth.json", "session.dat", "login.cache", "tokens.db"
+            )
+            
+            authFiles.forEach { fileName ->
+                val authFile = File(virtualDataPath, fileName)
+                if (authFile.exists()) {
+                    authFile.delete()
+                }
+            }
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    
+    /**
+     * 🔧 Setup login enforcement hooks
+     */
+    private fun setupLoginEnforcementHooks(packageName: String, virtualSpaceId: String) {
+        try {
+            val hookConfig = JSONObject().apply {
+                put("packageName", packageName)
+                put("virtualSpaceId", virtualSpaceId)
+                put("enforceFreshLogin", true)
+                put("clearAuthOnLaunch", true)
+                put("blockCachedLogin", true)
+                put("createdAt", System.currentTimeMillis())
+            }
+            
+            val editor = prefs.edit()
+            editor.putString("login_enforcement_${packageName}_${virtualSpaceId}", hookConfig.toString())
+            editor.apply()
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    
+    /**
+     * 🗂️ Hook SharedPreferences for complete data isolation
+     */
+    private fun hookSharedPreferences(packageName: String, virtualSpaceId: String) {
+        try {
+            val virtualDataPath = getVirtualDataPath(packageName, virtualSpaceId)
+            val prefsDir = File(virtualDataPath, "shared_prefs")
+            if (!prefsDir.exists()) {
+                prefsDir.mkdirs()
+            }
+            
+            val prefsHookConfig = JSONObject().apply {
+                put("packageName", packageName)
+                put("virtualSpaceId", virtualSpaceId)
+                put("isolatedPrefsDir", prefsDir.absolutePath)
+                put("hookActive", true)
+                put("createdAt", System.currentTimeMillis())
+            }
+            
+            val editor = prefs.edit()
+            editor.putString("prefs_hook_${packageName}_${virtualSpaceId}", prefsHookConfig.toString())
+            editor.apply()
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    
+    /**
+     * 🗄️ Hook Database access for isolated storage
+     */
+    private fun hookDatabaseAccess(packageName: String, virtualSpaceId: String) {
+        try {
+            val virtualDataPath = getVirtualDataPath(packageName, virtualSpaceId)
+            val dbDir = File(virtualDataPath, "databases")
+            if (!dbDir.exists()) {
+                dbDir.mkdirs()
+            }
+            
+            val dbHookConfig = JSONObject().apply {
+                put("packageName", packageName)
+                put("virtualSpaceId", virtualSpaceId)
+                put("isolatedDbDir", dbDir.absolutePath)
+                put("hookActive", true)
+                put("createdAt", System.currentTimeMillis())
+            }
+            
+            val editor = prefs.edit()
+            editor.putString("db_hook_${packageName}_${virtualSpaceId}", dbHookConfig.toString())
+            editor.apply()
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    
+    /**
+     * 🌐 Hook WebView for isolated web data
+     */
+    private fun hookWebViewData(packageName: String, virtualSpaceId: String) {
+        try {
+            val virtualDataPath = getVirtualDataPath(packageName, virtualSpaceId)
+            val webViewDir = File(virtualDataPath, "app_webview")
+            if (!webViewDir.exists()) {
+                webViewDir.mkdirs()
+            }
+            
+            // Create WebView subdirectories
+            val webViewSubDirs = listOf(
+                "Local Storage", "Session Storage", "IndexedDB",
+                "WebSQL", "Application Cache", "Cookies"
+            )
+            
+            webViewSubDirs.forEach { dirName ->
+                val dir = File(webViewDir, dirName)
+                if (!dir.exists()) {
+                    dir.mkdirs()
+                }
+            }
+            
+            val webViewHookConfig = JSONObject().apply {
+                put("packageName", packageName)
+                put("virtualSpaceId", virtualSpaceId)
+                put("isolatedWebViewDir", webViewDir.absolutePath)
+                put("hookActive", true)
+                put("createdAt", System.currentTimeMillis())
+            }
+            
+            val editor = prefs.edit()
+            editor.putString("webview_hook_${packageName}_${virtualSpaceId}", webViewHookConfig.toString())
+            editor.apply()
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    
+    /**
+     * 👤 Hook Account Manager for isolated accounts
+     */
+    private fun hookAccountManager(packageName: String, virtualSpaceId: String) {
+        try {
+            val virtualDataPath = getVirtualDataPath(packageName, virtualSpaceId)
+            val accountDir = File(virtualDataPath, "accounts")
+            if (!accountDir.exists()) {
+                accountDir.mkdirs()
+            }
+            
+            val accountHookConfig = JSONObject().apply {
+                put("packageName", packageName)
+                put("virtualSpaceId", virtualSpaceId)
+                put("isolatedAccountDir", accountDir.absolutePath)
+                put("hookActive", true)
+                put("requireFreshLogin", true)
+                put("createdAt", System.currentTimeMillis())
+            }
+            
+            val editor = prefs.edit()
+            editor.putString("account_hook_${packageName}_${virtualSpaceId}", accountHookConfig.toString())
+            editor.apply()
+            
         } catch (e: Exception) {
             e.printStackTrace()
         }

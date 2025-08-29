@@ -404,9 +404,13 @@ class HookingManager private constructor(private val context: Context) {
             val deviceInfoHooks = listOf(
                 DeviceInfoHook("android.os.Build", "getSerial", cloneId),
                 DeviceInfoHook("android.provider.Settings.Secure", "getString", cloneId),
+                DeviceInfoHook("android.provider.Settings.Secure", "getStringForUser", cloneId),
+                DeviceInfoHook("android.content.ContentResolver", "query", cloneId),
                 DeviceInfoHook("android.net.wifi.WifiInfo", "getMacAddress", cloneId),
                 DeviceInfoHook("android.bluetooth.BluetoothAdapter", "getAddress", cloneId),
-                DeviceInfoHook("android.telephony.TelephonyManager", "getDeviceId", cloneId)
+                DeviceInfoHook("android.telephony.TelephonyManager", "getDeviceId", cloneId),
+                DeviceInfoHook("android.telephony.TelephonyManager", "getImei", cloneId),
+                DeviceInfoHook("android.telephony.TelephonyManager", "getSubscriberId", cloneId)
             )
             
             deviceInfoHooks.forEach { hook ->
@@ -583,7 +587,7 @@ class HookingManager private constructor(private val context: Context) {
             Log.d(TAG, "Intercepting device info call: $method for clone: $cloneId")
             
             // Return spoofed device information
-            val spoofedInfo = getSpoofedDeviceInfo(cloneId, method)
+            val spoofedInfo = getSpoofedDeviceInfo(cloneId, method, args)
             
             // Log the interception
             logInterception(cloneId, "DEVICE_INFO", method, args)
@@ -606,22 +610,90 @@ class HookingManager private constructor(private val context: Context) {
         return null
     }
     
-    private fun getSpoofedDeviceInfo(cloneId: String, method: String): Any? {
-        // Get spoofed device information from DeviceSpoofingManager
-        val deviceSpoofingManager = DeviceSpoofingManager.getInstance(context)
-        val spoofedInfo = deviceSpoofingManager.getSpoofedDeviceInfo(cloneId)
-        
-        return when (method) {
-            "getDeviceId" -> spoofedInfo?.deviceId
-            "getImei" -> spoofedInfo?.imei
-            "getSerial" -> spoofedInfo?.serialNumber
-            "getMacAddress" -> spoofedInfo?.macAddress
-            "getAddress" -> spoofedInfo?.bluetoothAddress
-            else -> null
+    private fun getSpoofedDeviceInfo(cloneId: String, method: String, args: Array<Any?>? = null): Any? {
+        try {
+            // Get spoofed device information from DeviceSpoofingManager
+            val deviceSpoofingManager = DeviceSpoofingManager.getInstance(context)
+            val spoofedInfo = deviceSpoofingManager.getSpoofedDeviceInfo(cloneId)
+            
+            return when (method) {
+                "getDeviceId" -> spoofedInfo?.deviceId
+                "getImei" -> spoofedInfo?.imei
+                "getSerial" -> spoofedInfo?.serialNumber
+                "getMacAddress" -> spoofedInfo?.macAddress
+                "getAddress" -> spoofedInfo?.bluetoothAddress
+                "getString" -> {
+                    // Handle Settings.Secure.getString calls
+                    if (args != null && args.isNotEmpty()) {
+                        val key = args.getOrNull(1) as? String
+                        when (key) {
+                            "android_id" -> spoofedInfo?.androidId
+                            "bluetooth_address" -> spoofedInfo?.bluetoothAddress
+                            "wifi_mac_address" -> spoofedInfo?.macAddress
+                            else -> null
+                        }
+                    } else null
+                }
+                "getStringForUser" -> {
+                    // Handle Settings.Secure.getStringForUser calls
+                    if (args != null && args.size >= 2) {
+                        val key = args.getOrNull(1) as? String
+                        when (key) {
+                            "android_id" -> spoofedInfo?.androidId
+                            "bluetooth_address" -> spoofedInfo?.bluetoothAddress
+                            "wifi_mac_address" -> spoofedInfo?.macAddress
+                            else -> null
+                        }
+                    } else null
+                }
+                "query" -> {
+                    // Handle ContentResolver.query calls for Settings.Secure
+                    if (args != null && args.isNotEmpty()) {
+                        val uri = args.getOrNull(0)?.toString()
+                        if (uri?.contains("settings/secure") == true) {
+                            // Return spoofed cursor for Settings.Secure queries
+                            createSpoofedCursor(cloneId, spoofedInfo)
+                        } else null
+                    } else null
+                }
+                "getSubscriberId" -> "000000000000000" // Default subscriber ID for clone
+                else -> null
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting spoofed device info for method: $method", e)
+            return null
         }
-    }
-    
-    private fun logInterception(cloneId: String, type: String, method: String, args: Array<Any?>) {
+     }
+     
+     private fun createSpoofedCursor(cloneId: String, spoofedInfo: Any?): android.database.Cursor? {
+         try {
+             // Create a MatrixCursor with spoofed Settings.Secure values
+             val cursor = android.database.MatrixCursor(arrayOf("name", "value"))
+             
+             // Add spoofed android_id
+             if (spoofedInfo != null) {
+                 val deviceSpoofingManager = DeviceSpoofingManager.getInstance(context)
+                 val deviceInfo = deviceSpoofingManager.getSpoofedDeviceInfo(cloneId)
+                 
+                 cursor.addRow(arrayOf("android_id", deviceInfo?.androidId ?: generateRandomAndroidId()))
+                 cursor.addRow(arrayOf("bluetooth_address", deviceInfo?.bluetoothAddress ?: "02:00:00:00:00:00"))
+                 cursor.addRow(arrayOf("wifi_mac_address", deviceInfo?.macAddress ?: "02:00:00:00:00:00"))
+             }
+             
+             Log.d(TAG, "Created spoofed cursor for clone: $cloneId")
+             return cursor
+             
+         } catch (e: Exception) {
+             Log.e(TAG, "Error creating spoofed cursor", e)
+             return null
+         }
+     }
+     
+     private fun generateRandomAndroidId(): String {
+         return java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 16)
+     }
+     
+     private fun logInterception(cloneId: String, type: String, method: String, args: Array<Any?>) {
         try {
             val logEntry = JSONObject().apply {
                 put("clone_id", cloneId)

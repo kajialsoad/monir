@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'app_list_screen.dart';
 import 'cloned_apps_screen.dart';
 import '../services/permission_service.dart';
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   // Removed system information variables
   final GlobalKey<ClonedAppsScreenState> _clonedAppsKey = GlobalKey<ClonedAppsScreenState>();
+  static const platform = MethodChannel('com.multispace.app.multispace_cloner1/main');
 
   late final List<Widget> _screens;
 
@@ -239,6 +241,12 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         children: [
           _buildSettingsTile(
+            icon: Icons.cleaning_services,
+            title: 'Clear All Sandboxes',
+            subtitle: 'Fix storage limit issues by clearing all sandbox environments',
+            onTap: _clearAllSandboxEnvironments,
+          ),
+          _buildSettingsTile(
             icon: Icons.help_outline,
             title: 'Help & Support',
             subtitle: 'Get help and contact support',
@@ -325,6 +333,72 @@ class _HomeScreenState extends State<HomeScreen> {
   // Removed memory optimization methods
 
   // Removed complex settings methods (Security, Performance, Backup)
+
+  void _clearAllSandboxEnvironments() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const AlertDialog(
+        backgroundColor: Colors.grey,
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 16),
+            Text('Clearing all sandbox environments...'),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      await platform.invokeMethod('clearAllSandboxEnvironments');
+      Navigator.pop(context); // Close loading dialog
+      
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: Colors.grey[900],
+          title: const Text(
+            'Success',
+            style: TextStyle(color: Colors.green),
+          ),
+          content: const Text(
+            'All sandbox environments have been cleared successfully. This should fix storage limit issues.',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK', style: TextStyle(color: Colors.orange)),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      Navigator.pop(context); // Close loading dialog
+      
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: Colors.grey[900],
+          title: const Text(
+            'Error',
+            style: TextStyle(color: Colors.red),
+          ),
+          content: Text(
+            'Failed to clear sandbox environments: $e',
+            style: const TextStyle(color: Colors.white),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK', style: TextStyle(color: Colors.orange)),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   void _showHelpSupport() {
     showDialog(

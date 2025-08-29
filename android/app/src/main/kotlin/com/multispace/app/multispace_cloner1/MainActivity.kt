@@ -105,6 +105,19 @@ class MainActivity: FlutterActivity() {
             Log.e(TAG, "❌ Failed to enforce fresh sign-in on startup", e)
         }
         
+        // 🔍 DEBUG: Check cloned apps in database
+        try {
+            Log.d(TAG, "🔍 DEBUG: Checking cloned apps in database...")
+            val clonedApps = virtualSpaceEngine.getAllClonedApps()
+            Log.d(TAG, "🔍 DEBUG: Found ${clonedApps.size} cloned apps in database")
+            
+            for (clonedApp in clonedApps) {
+                Log.d(TAG, "🔍 DEBUG: Cloned App - ID: ${clonedApp.id}, Name: ${clonedApp.clonedAppName}, Package: ${clonedApp.originalPackageName}, Active: ${clonedApp.isActive}")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ DEBUG: Failed to check cloned apps", e)
+        }
+        
         // Initialize security channel
         securityChannel = SecurityChannel(this)
         securityChannel.initialize(flutterEngine)
@@ -290,6 +303,9 @@ class MainActivity: FlutterActivity() {
                 }
                 "getVirtualSpaceHealthReport" -> {
                     getVirtualSpaceHealthReport(call, result)
+                }
+                "clearAllSandboxEnvironments" -> {
+                    clearAllSandboxEnvironments(result)
                 }
                 else -> {
                     result.notImplemented()
@@ -951,6 +967,11 @@ class MainActivity: FlutterActivity() {
             val clonedApps = virtualSpaceEngine.getAllClonedApps()
             
             Log.d(TAG, "getClonedApps: Found ${clonedApps.size} cloned apps in database")
+            
+            // Debug: Print all cloned apps details
+            for ((index, app) in clonedApps.withIndex()) {
+                Log.d(TAG, "ClonedApp[$index]: id=${app.id}, name=${app.clonedAppName}, package=${app.originalPackageName}, active=${app.isActive}")
+            }
             
             for (clonedApp in clonedApps) {
                 try {
@@ -2205,5 +2226,36 @@ class MainActivity: FlutterActivity() {
         
         Log.d(TAG, "Special app detection test: ${if (result) "PASSED" else "FAILED"}")
         return result
+    }
+    
+    /**
+     * 🧹 Clear All Sandbox Environments
+     * Clears all active sandboxes to fix storage limit issues
+     */
+    private fun clearAllSandboxEnvironments(result: MethodChannel.Result) {
+        try {
+            Log.d(TAG, "🧹 MainActivity: Clearing all sandbox environments...")
+            
+            // Clear all sandboxes through VirtualSpaceEngine
+            val success = virtualSpaceEngine.clearAllSandboxEnvironments()
+            
+            if (success) {
+                Log.d(TAG, "✅ All sandbox environments cleared successfully")
+                result.success(mapOf(
+                    "success" to true,
+                    "message" to "All sandbox environments cleared successfully"
+                ))
+            } else {
+                Log.e(TAG, "❌ Failed to clear some sandbox environments")
+                result.success(mapOf(
+                    "success" to false,
+                    "message" to "Failed to clear some sandbox environments"
+                ))
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ Error clearing sandbox environments", e)
+            result.error("CLEAR_SANDBOX_ERROR", "Failed to clear sandbox environments: ${e.message}", null)
+        }
     }
 }
