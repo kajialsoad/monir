@@ -1,0 +1,144 @@
+{
+  "execution_time": "2025-08-20T12:20:55.835008",
+  "total_tests": 17,
+  "passed": 0,
+  "failed": 17,
+  "results": [
+    {
+      "test_file": "TC001_Clone_installed_app_successfully.py",
+      "status": "FAILED",
+      "execution_time": 12.297668218612671,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC001_Clone_installed_app_successfully.py\", line 84, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  F"
+    },
+    {
+      "test_file": "TC002_Data_isolation_between_cloned_app_instances.py",
+      "status": "FAILED",
+      "execution_time": 9.607558250427246,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC002_Data_isolation_between_cloned_app_instances.py\", line 131, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "test_file": "TC003_Custom_icon_and_name_for_cloned_apps.py",
+      "status": "FAILED",
+      "execution_time": 1.6061265468597412,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC003_Custom_icon_and_name_for_cloned_apps.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^"
+    },
+    {
+      "test_file": "TC004_MethodChannel_communication_reliability.py",
+      "status": "FAILED",
+      "execution_time": 1.341306447982788,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC004_MethodChannel_communication_reliability.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^"
+    },
+    {
+      "test_file": "TC005_Security_feature_enforcement_on_cloned_apps.py",
+      "status": "FAILED",
+      "execution_time": 9.807163000106812,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC005_Security_feature_enforcement_on_cloned_apps.py\", line 131, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "test_file": "TC006_Performance_under_multiple_app_cloning_load.py",
+      "status": "FAILED",
+      "execution_time": 1.2026293277740479,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC006_Performance_under_multiple_app_cloning_load.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "test_file": "TC007_App_list_and_search_functionality.py",
+      "status": "FAILED",
+      "execution_time": 9.232629776000977,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC007_App_list_and_search_functionality.py\", line 89, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  "
+    },
+    {
+      "test_file": "TC008_Settings_configuration_persistence_and_effect.py",
+      "status": "FAILED",
+      "execution_time": 1.4030194282531738,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC008_Settings_configuration_persistence_and_effect.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "test_file": "TC009_Clone_deletion_and_resource_cleanup.py",
+      "status": "FAILED",
+      "execution_time": 1.3243396282196045,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC009_Clone_deletion_and_resource_cleanup.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n"
+    },
+    {
+      "test_file": "TC010_Auto_clone_detection_for_installed_apps.py",
+      "status": "FAILED",
+      "execution_time": 1.6231935024261475,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC010_Auto_clone_detection_for_installed_apps.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^"
+    },
+    {
+      "test_file": "TC011_Synchronization_between_cloned_app_instances.py",
+      "status": "FAILED",
+      "execution_time": 1.2593293190002441,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC011_Synchronization_between_cloned_app_instances.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "test_file": "TC012_Compliance_with_Google_Play_Store_policies.py",
+      "status": "FAILED",
+      "execution_time": 1.300034999847412,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC012_Compliance_with_Google_Play_Store_policies.py\", line 59, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "test_file": "TC013_Runtime_hooking_system_behavior.py",
+      "status": "FAILED",
+      "execution_time": 1.4120445251464844,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC013_Runtime_hooking_system_behavior.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  Fi"
+    },
+    {
+      "test_file": "TC014_Statistics_tracking_accuracy.py",
+      "status": "FAILED",
+      "execution_time": 1.1395878791809082,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC014_Statistics_tracking_accuracy.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File "
+    },
+    {
+      "test_file": "TC015_Account_management_across_cloned_apps.py",
+      "status": "FAILED",
+      "execution_time": 1.128166913986206,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC015_Account_management_across_cloned_apps.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^"
+    },
+    {
+      "test_file": "TC016_Error_handling_on_cloning_unsupported_apps.py",
+      "status": "FAILED",
+      "execution_time": 1.1399741172790527,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC016_Error_handling_on_cloning_unsupported_apps.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "test_file": "TC017_Memory_leak_detection_and_resolution.py",
+      "status": "FAILED",
+      "execution_time": 1.216259479522705,
+      "return_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"G:\\multispace_cloner1\\multispace_cloner\\testsprite_tests\\TC017_Memory_leak_detection_and_resolution.py\", line 63, in <module>\n    asyncio.run(run_test())\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 194, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Python313\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^"
+    }
+  ]
+}

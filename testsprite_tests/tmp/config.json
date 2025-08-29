@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:5174",
+  "loginUser": "test",
+  "loginPassword": "1234",
+  "executionArgs": {
+    "projectName": "multispace_cloner",
+    "projectPath": "c:\\Users\\Munna\\Downloads\\multispace_cloner_source\\multispace_cloner",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-7R6uXB2Qos9y7qdxKFEjZxl2rMUpU-Bo0eD78QlrSCspXChxMh3T0K_rRot2fC_etensZwOD-3XoOx5bYgugqvwbEb4eMk0tJ8Bx7Pix30IDH6lNAf-f2hc0239zZSqLLOc"
+    }
+  },
+  "proxy": "http://83dc672f-bb91-4485-a3d9-12a572091377:dczcu58kvorMHw2pTn1lbOreTRFt2qGZ@tun.testsprite.com:8080"
+}

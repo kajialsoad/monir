@@ -1,0 +1,2 @@
+C:/Users/Munna/Downloads/multispace_cloner_source/multispace_cloner/android/app/.cxx/Debug/1l55y2u2/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Munna/Downloads/multispace_cloner_source/multispace_cloner/android/app/.cxx/Debug/1l55y2u2/armeabi-v7a/CMakeFiles/rebuild_cache.dir

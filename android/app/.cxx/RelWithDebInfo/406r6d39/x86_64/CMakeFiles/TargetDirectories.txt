@@ -1,0 +1,2 @@
+G:/multispace_cloner1/multispace_cloner/android/app/.cxx/RelWithDebInfo/406r6d39/x86_64/CMakeFiles/edit_cache.dir
+G:/multispace_cloner1/multispace_cloner/android/app/.cxx/RelWithDebInfo/406r6d39/x86_64/CMakeFiles/rebuild_cache.dir
